@@ -7,4 +7,4 @@ const apify = axiosPromise =>
 
 export const fetchTrackList = () => apify(axios.get('api/v1/users/u1/tracks'));
 export const getPresignUrl = trackName =>
-  apify(axios.get(`api/v1/users/u1/tracks/TapDance.mp3`));
+  apify(axios.get(`api/v1/users/u1/tracks/${trackName}`));

@@ -9,7 +9,7 @@ export const onPlay = trackName => dispatch => {
     .then(data => {
       dispatch({
         type: actioTypes.PLAY_REQUEST_SUCCSESS,
-        payload: { ...data, name: `u1/${data.name}` },
+        payload: { ...data },
       });
     })
     .catch(err =>
