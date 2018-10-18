@@ -1,0 +1,41 @@
+Description: >
+  This template deploys a bucket for a static web site
+
+Parameters:
+
+  UserName:
+    Description: A name of the user which will have write permissions to the created bucket
+    Type: String 
+
+Resources:
+  s3Bucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketName: streaming-service-webapp
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: / 
+  s3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref s3Bucket
+      PolicyDocument:
+        Statement:
+          - Sid: ReadAccess
+            Action:
+              - "s3:GetObject"
+            Effect: "Allow"
+            Resource: 'arn:aws:s3:::streaming-service-webapp/*'
+            Principal: "*"
+          - Sid: ListWriteDeleteAccess
+            Action:
+              - "s3:ListBucket"
+              - "s3:PutObject"
+              - "s3:DeleteObject"
+            Effect: "Allow"
+            Resource:
+              - 'arn:aws:s3:::streaming-service-webapp/*'
+              - 'arn:aws:s3:::streaming-service-webapp' 
+            Principal:
+               AWS:
+                - !Join ['', ['arn:aws:iam::', !Ref 'AWS::AccountId', ':user/', !Ref 'UserName']]
