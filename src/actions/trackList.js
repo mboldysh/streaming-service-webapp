@@ -13,3 +13,15 @@ export const fetchTrackList = () => dispatch => {
     })
     .catch(() => dispatch({ type: actionTypes.FETCH_TRACK_LIST_FAILED }));
 };
+
+export const deleteObject = objectName => dispatch => {
+  api
+    .deleteObject(objectName)
+    .then(tracks => {
+      dispatch({
+        type: actionTypes.FETCH_TRACK_LIST_DONE,
+        payload: { tracks },
+      });
+    })
+    .catch(() => dispatch({ type: actionTypes.FETCH_TRACK_LIST_FAILED }));
+};

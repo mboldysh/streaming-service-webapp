@@ -37,6 +37,12 @@ export default (state = initialState, action) => {
         isPlaying: !state.isPlaying,
       };
     }
+    case ActionsTypes.CHANGE_TRACK: {
+      return {
+        ...state,
+        currentTrack: action.payload.nextTrackName,
+      };
+    }
     default:
       return state;
   }

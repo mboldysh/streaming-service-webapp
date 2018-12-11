@@ -37,11 +37,18 @@ class Home extends React.Component {
     return (
       <div>
         <Header />
-        <Grid container direction="row" justify="center" alignItems="center">
-          <div className={classes.root}>
-            <TrackList tracks={tracks} />
-          </div>
-        </Grid>
+        {currentTrack && (
+          <Grid container direction="row" justify="center" alignItems="center">
+            <div className={classes.root}>
+              <TrackList
+                tracks={tracks}
+                deleteTrack={actions.deleteObject}
+                currentTrackName={currentTrack.name}
+                isPlaying={player.isPlaying}
+              />
+            </div>
+          </Grid>
+        )}
         {currentTrack && (
           <SoundPlayer
             streamUrl={currentTrack.url}
@@ -49,6 +56,8 @@ class Home extends React.Component {
             playing={player.isPlaying}
             seeking={player.isLoading}
             onTogglePlay={actions.togglePlayer}
+            nextTrack={actions.nextTrack}
+            previousTrack={actions.previousTrack}
             preloadType="auto"
           />
         )}
@@ -84,10 +93,6 @@ const mapStateToProps = state => ({
       track => track.name === state.player.currentTrack
     ) || null,
   player: state.player,
-  // hasNext:
-  //   !state.player.currentTrack !==
-  //   state.trackList.tracks[state.trackList.length - 1],
-  // hasPrev: !state.player.currentTrack !== state.trackList.tracks[0],
 });
 
 const mapDispatchToProps = dispatch => ({

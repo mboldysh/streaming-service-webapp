@@ -10,9 +10,21 @@ const styles = () => ({
   },
 });
 
-const TrackList = ({ tracks, classes }) => {
+const TrackList = ({
+  tracks,
+  classes,
+  deleteTrack,
+  currentTrackName,
+  isPlaying,
+}) => {
   const trackItems = tracks.map(track => (
-    <TrackItem key={track.name} trackName={track.name} />
+    <TrackItem
+      key={track.name}
+      trackName={track.name}
+      currentTrackName={currentTrackName}
+      isPlaying={isPlaying}
+      deleteTrack={deleteTrack}
+    />
   ));
   return <List classes={{ root: classes.root }}>{trackItems}</List>;
 };
@@ -23,6 +35,9 @@ TrackList.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
+  currentTrackName: PropTypes.string.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  deleteTrack: PropTypes.func.isRequired,
   classes: PropTypes.shape({
     margin: PropTypes.string,
   }).isRequired,
