@@ -20,7 +20,6 @@ const styles = () => ({
 
 class Home extends React.Component {
   componentDidMount() {
-    console.log(this.props);
     const { actions } = this.props;
     actions.fetchTrackList();
   }
@@ -38,28 +37,33 @@ class Home extends React.Component {
       <div>
         <Header />
         {currentTrack && (
-          <Grid container direction="row" justify="center" alignItems="center">
-            <div className={classes.root}>
-              <TrackList
-                tracks={tracks}
-                deleteTrack={actions.deleteObject}
-                currentTrackName={currentTrack.name}
-                isPlaying={player.isPlaying}
-              />
-            </div>
-          </Grid>
-        )}
-        {currentTrack && (
-          <SoundPlayer
-            streamUrl={currentTrack.url}
-            trackTitle={currentTrack.name}
-            playing={player.isPlaying}
-            seeking={player.isLoading}
-            onTogglePlay={actions.togglePlayer}
-            nextTrack={actions.nextTrack}
-            previousTrack={actions.previousTrack}
-            preloadType="auto"
-          />
+          <div>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <div className={classes.root}>
+                <TrackList
+                  tracks={tracks}
+                  deleteTrack={actions.deleteObject}
+                  currentTrackName={currentTrack.name}
+                  isPlaying={player.isPlaying}
+                />
+              </div>
+            </Grid>
+            <SoundPlayer
+              streamUrl={currentTrack.url}
+              trackTitle={currentTrack.name}
+              playing={player.isPlaying}
+              seeking={player.isLoading}
+              onTogglePlay={actions.togglePlayer}
+              nextTrack={actions.nextTrack}
+              previousTrack={actions.previousTrack}
+              preloadType="auto"
+            />
+          </div>
         )}
       </div>
     );
@@ -79,6 +83,11 @@ Home.propTypes = {
   currentTrack: PropTypes.shape({
     name: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
+  }).isRequired,
+  player: PropTypes.shape({
+    currentTrack: PropTypes.string.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    isPlaying: PropTypes.bool.isRequired,
   }).isRequired,
   classes: PropTypes.shape({
     width: PropTypes.string,
