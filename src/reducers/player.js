@@ -16,10 +16,17 @@ export default (state = initialState, action) => {
         isLoading: true,
       };
     }
+    case ActionsTypes.REQUEST_NEXT_TRACK: {
+      return {
+        ...state,
+        isPlaying: false,
+        isLoading: true,
+      };
+    }
     case ActionsTypes.PLAY_REQUEST_SUCCSESS: {
       return {
         ...state,
-        currentTrack: action.payload.name,
+        currentTrack: { name: action.payload.name, url: action.payload.url },
         isLoading: false,
         isPlaying: false,
       };

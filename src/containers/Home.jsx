@@ -50,6 +50,9 @@ class Home extends React.Component {
                   deleteTrack={actions.deleteObject}
                   currentTrackName={currentTrack.name}
                   isPlaying={player.isPlaying}
+                  togglePlayer={actions.togglePlayer}
+                  pause={actions.pause}
+                  play={actions.play}
                 />
               </div>
             </Grid>
@@ -61,6 +64,7 @@ class Home extends React.Component {
               onTogglePlay={actions.togglePlayer}
               nextTrack={actions.nextTrack}
               previousTrack={actions.previousTrack}
+              onStopTrack={actions.onAudioEnded}
               preloadType="auto"
             />
           </div>
@@ -85,7 +89,10 @@ Home.propTypes = {
     url: PropTypes.string.isRequired,
   }).isRequired,
   player: PropTypes.shape({
-    currentTrack: PropTypes.string.isRequired,
+    currentTrack: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+    }).isRequired,
     isLoading: PropTypes.bool.isRequired,
     isPlaying: PropTypes.bool.isRequired,
   }).isRequired,
@@ -97,10 +104,10 @@ Home.propTypes = {
 
 const mapStateToProps = state => ({
   tracks: state.trackList.tracks,
-  currentTrack:
-    state.trackList.tracks.find(
-      track => track.name === state.player.currentTrack
-    ) || null,
+  currentTrack: state.player.currentTrack || null,
+  // state.trackList.tracks.find(
+  //   track => track.name === state.player.currentTrack
+  // ) || null,
   player: state.player,
 });
 

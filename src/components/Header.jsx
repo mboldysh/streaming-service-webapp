@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
+import Add from '@material-ui/icons/Add';
+import { IconButton } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -27,6 +29,9 @@ class Header extends React.PureComponent {
       <div className={classes.root}>
         <AppBar position="static" className={classes.appBar}>
           <ToolBar className={classes.toolBar}>
+            <IconButton>
+              <Add />
+            </IconButton>
             <Link to="/">
               <Button>Home</Button>
             </Link>

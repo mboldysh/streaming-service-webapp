@@ -10,17 +10,28 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 
-const TrackItem = ({ trackName, deleteTrack, currentTrackName, isPlaying }) => (
+const TrackItem = ({
+  trackName,
+  deleteTrack,
+  currentTrackName,
+  isPlaying,
+  pause,
+  play,
+}) => (
   <ListItem divider>
     <ListItemIcon>
       {trackName === currentTrackName && isPlaying ? (
-        <PauseIcon />
+        <IconButton onClick={pause}>
+          <PauseIcon />
+        </IconButton>
       ) : (
-        <PlayArrowIcon />
+        <IconButton onClick={() => play(trackName)}>
+          <PlayArrowIcon />
+        </IconButton>
       )}
     </ListItemIcon>
     <ListItemText primary={trackName} />
-    <IconButton aria-label="Delete" onClick={() => deleteTrack(trackName)}>
+    <IconButton onClick={() => deleteTrack(trackName)}>
       <DeleteIcon />
     </IconButton>
   </ListItem>
@@ -31,6 +42,8 @@ TrackItem.propTypes = {
   currentTrackName: PropTypes.string.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   deleteTrack: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+  play: PropTypes.func.isRequired,
 };
 
 export default TrackItem;

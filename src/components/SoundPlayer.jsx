@@ -5,14 +5,15 @@ import {
   NextButton,
   PrevButton,
 } from 'react-soundplayer/components';
-import { withCustomAudio } from 'react-soundplayer/addons';
 import PropTypes from 'prop-types';
+import withPlayer from '../hocs/withPlayer';
 import 'react-soundplayer/styles/buttons.css';
 import 'react-soundplayer/styles/icons.css';
 import 'react-soundplayer/styles/progress.css';
 
-const SoundPlayer = withCustomAudio(props => {
+const SoundPlayer = withPlayer(props => {
   const { trackTitle, nextTrack, previousTrack } = props;
+
   return (
     <div className="p1 mt1 flex flex-center bg-silver orange rounded fixed bottom-0 left-0 right-0">
       <PrevButton
@@ -41,6 +42,7 @@ SoundPlayer.propTypes = {
   preloadType: PropTypes.string.isRequired,
   nextTrack: PropTypes.func.isRequired,
   previousTrack: PropTypes.func.isRequired,
+  onStopTrack: PropTypes.func.isRequired,
 };
 
 export default SoundPlayer;
