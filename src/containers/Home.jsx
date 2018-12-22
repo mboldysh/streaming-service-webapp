@@ -10,6 +10,7 @@ import TrackList from '../components/TrackList';
 import SoundPlayer from '../components/SoundPlayer';
 import * as TracksActions from '../actions/trackList';
 import * as PlayerActions from '../actions/player';
+import * as UserActions from '../actions/user';
 
 const styles = () => ({
   root: {
@@ -32,10 +33,23 @@ class Home extends React.Component {
   }
 
   render() {
-    const { actions, player, tracks, currentTrack, classes } = this.props;
+    const {
+      actions,
+      player,
+      tracks,
+      currentTrack,
+      classes,
+      isDownloading,
+      isUploading,
+    } = this.props;
     return (
       <div>
-        <Header />
+        <Header
+          uploadTracks={actions.uploadTracks}
+          isUploading={isUploading}
+          isDownloading={isDownloading}
+          logOut={actions.logOut}
+        />
         {currentTrack && (
           <div>
             <Grid
@@ -45,6 +59,7 @@ class Home extends React.Component {
               alignItems="center"
             >
               <div className={classes.root}>
+                {/* <LinearProgress color="secondary" /> */}
                 <TrackList
                   tracks={tracks}
                   deleteTrack={actions.deleteObject}
@@ -53,11 +68,14 @@ class Home extends React.Component {
                   togglePlayer={actions.togglePlayer}
                   pause={actions.pause}
                   play={actions.play}
+                  download={actions.downloadTrack}
                 />
               </div>
             </Grid>
             <SoundPlayer
               streamUrl={currentTrack.url}
+              pause={actions.pause}
+              play={actions.play}
               trackTitle={currentTrack.name}
               playing={player.isPlaying}
               seeking={player.isLoading}
@@ -96,6 +114,8 @@ Home.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     isPlaying: PropTypes.bool.isRequired,
   }).isRequired,
+  isUploading: PropTypes.bool.isRequired,
+  isDownloading: PropTypes.bool.isRequired,
   classes: PropTypes.shape({
     width: PropTypes.string,
     maxWidth: PropTypes.number,
@@ -109,10 +129,15 @@ const mapStateToProps = state => ({
   //   track => track.name === state.player.currentTrack
   // ) || null,
   player: state.player,
+  isUploading: state.load.isUploading,
+  isDownloading: state.load.isDownloading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ ...TracksActions, ...PlayerActions }, dispatch),
+  actions: bindActionCreators(
+    { ...TracksActions, ...PlayerActions, ...UserActions },
+    dispatch
+  ),
 });
 
 export default compose(

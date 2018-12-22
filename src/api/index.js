@@ -12,3 +12,21 @@ export const getPresignUrl = trackName =>
   apify(axios.get(`api/v1/users/u1/tracks/${trackName}`));
 export const deleteObject = trackName =>
   apify(axios.delete(`api/v1/users/u1/tracks/${trackName}`));
+
+export const uploadFiles = files => {
+  console.log(files);
+  const uploaders = Array.from(files).map(file => {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return axios.post('api/v1/users/u1/tracks', formData, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    });
+  });
+
+  return apify(axios.all(uploaders));
+};
+
+export const downloadFile = url =>
+  axios.get(url, {
+    responseType: 'blob',
+  });

@@ -1,5 +1,6 @@
 import * as api from '../api';
 import actioTypes from './actionTypes';
+import fileSaver from '../fileSaver';
 
 export const onPlay = trackName => dispatch => {
   dispatch({ type: actioTypes.PLAY_REQUEST, payload: trackName });
@@ -25,6 +26,7 @@ export const pause = () => (dispatch, getState, soundCloudAudio) => {
 export const play = trackName => (dispatch, getState, soundCloudAudio) => {
   if (trackName === getState().player.currentTrack.name) {
     soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
+    dispatch({ type: actioTypes.TOGGLE_PLAYER });
   } else {
     dispatch({ type: actioTypes.REQUEST_NEXT_TRACK });
     soundCloudAudio.pause();
@@ -134,4 +136,52 @@ export const previousTrack = () => (dispatch, getState, soundCloudAudio) => {
         dispatch({ type: actioTypes.PLAY_REQUEST_FAILED, payload: err })
       );
   }
+};
+
+export const uploadTracks = tracks => async dispatch => {
+  dispatch({ type: actioTypes.UPLOUD_START });
+
+  try {
+    await api.uploadFiles(tracks);
+    dispatch({ type: actioTypes.FETCH_TRACK_LIST });
+
+    const trackList = await api.fetchTrackList();
+
+    dispatch({
+      type: actioTypes.FETCH_TRACK_LIST_DONE,
+      payload: { tracks: trackList },
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: actioTypes.FETCH_TRACK_LIST_FAILED });
+  }
+
+  dispatch({ type: actioTypes.UPLOAD_FINISHED });
+};
+
+// dispatch({ type: actionTypes.FETCH_TRACK_LIST });
+//   api
+//     .fetchTrackList()
+//     .then(tracks => {
+//       dispatch({
+//         type: actionTypes.FETCH_TRACK_LIST_DONE,
+//         payload: { tracks },
+//       });
+//     })
+//     .catch(() => dispatch({ type: actionTypes.FETCH_TRACK_LIST_FAILED }));
+
+export const downloadTrack = trackName => async dispatch => {
+  dispatch({ type: actioTypes.DOWNLOAD_START });
+
+  try {
+    const { url } = await api.getPresignUrl(trackName);
+
+    const { data } = await api.downloadFile(url);
+
+    await fileSaver(data, trackName);
+  } catch (error) {
+    console.log(error);
+  }
+
+  dispatch({ type: actioTypes.DOWNLOAD_FINISHED });
 };

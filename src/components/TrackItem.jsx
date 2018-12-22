@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import ArrowDonwnward from '@material-ui/icons/ArrowDownward';
 import PauseIcon from '@material-ui/icons/Pause';
 
 const TrackItem = ({
@@ -17,6 +18,7 @@ const TrackItem = ({
   isPlaying,
   pause,
   play,
+  download,
 }) => (
   <ListItem divider>
     <ListItemIcon>
@@ -31,6 +33,9 @@ const TrackItem = ({
       )}
     </ListItemIcon>
     <ListItemText primary={trackName} />
+    <IconButton onClick={() => download(trackName)}>
+      <ArrowDonwnward />
+    </IconButton>
     <IconButton onClick={() => deleteTrack(trackName)}>
       <DeleteIcon />
     </IconButton>
@@ -44,6 +49,7 @@ TrackItem.propTypes = {
   deleteTrack: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,
   play: PropTypes.func.isRequired,
+  download: PropTypes.func.isRequired,
 };
 
 export default TrackItem;

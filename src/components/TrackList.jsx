@@ -22,6 +22,7 @@ const TrackList = ({
   togglePlayer,
   pause,
   play,
+  download,
   soundCloudAudio,
 }) => {
   const trackItems = tracks.map(track => (
@@ -34,6 +35,7 @@ const TrackList = ({
       togglePlayer={togglePlayer}
       pause={pause}
       play={play}
+      download={download}
       soundCloudAudio={soundCloudAudio}
     />
   ));
@@ -52,6 +54,7 @@ TrackList.propTypes = {
   togglePlayer: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,
   play: PropTypes.func.isRequired,
+  download: PropTypes.func.isRequired,
   soundCloudAudio: PropTypes.instanceOf(SoundCloudAudio).isRequired,
   classes: PropTypes.shape({
     margin: PropTypes.string,

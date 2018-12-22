@@ -28,11 +28,10 @@ export default (state = initialState, action) => {
     case ActionTypes.PLAY_REQUEST_SUCCSESS: {
       return {
         ...state,
-        tracks: state.tracks.map(
-          track =>
-            track.name === action.payload.name
-              ? { ...track, url: action.payload.url }
-              : track
+        tracks: state.tracks.map(track =>
+          track.name === action.payload.name
+            ? { ...track, url: action.payload.url }
+            : track
         ),
       };
     }

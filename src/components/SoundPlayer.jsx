@@ -1,12 +1,8 @@
 import React from 'react';
-import {
-  PlayButton,
-  Timer,
-  NextButton,
-  PrevButton,
-} from 'react-soundplayer/components';
+import { Timer, NextButton, PrevButton } from 'react-soundplayer/components';
 import PropTypes from 'prop-types';
 import withPlayer from '../hocs/withPlayer';
+import PlayButton from './PlayButton';
 import 'react-soundplayer/styles/buttons.css';
 import 'react-soundplayer/styles/icons.css';
 import 'react-soundplayer/styles/progress.css';
@@ -19,7 +15,7 @@ const SoundPlayer = withPlayer(props => {
       <PrevButton
         className="flex-none h3 button button-narrow button-transparent button-grow rounded"
         onPrevClick={previousTrack}
-        {...this.props}
+        {...props}
       />
       <PlayButton
         className="flex-none h4 button button-transparent button-grow rounded mr2"
@@ -28,7 +24,7 @@ const SoundPlayer = withPlayer(props => {
       <NextButton
         className="flex-none h3 button button-narrow button-transparent button-grow rounded"
         onNextClick={nextTrack}
-        {...this.props}
+        {...props}
       />
       <h2 className="h5 nowrap caps flex-auto m0">{trackTitle}</h2>
       <Timer className="h6 mr1" {...props} />
@@ -38,6 +34,8 @@ const SoundPlayer = withPlayer(props => {
 
 SoundPlayer.propTypes = {
   streamUrl: PropTypes.string.isRequired,
+  pause: PropTypes.func.isRequired,
+  play: PropTypes.func.isRequired,
   trackTitle: PropTypes.string.isRequired,
   preloadType: PropTypes.string.isRequired,
   nextTrack: PropTypes.func.isRequired,
