@@ -15,7 +15,6 @@ export const deleteObject = (userName, trackName) =>
   apify(axios.delete(`api/v1/users/${userName}/tracks/${trackName}`));
 
 export const uploadFiles = (userName, files) => {
-  console.log(files);
   const uploaders = Array.from(files).map(file => {
     const formData = new FormData();
     formData.append('file', file, file.name);

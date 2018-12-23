@@ -21,8 +21,6 @@ const styles = () => ({
   },
   container: {
     display: 'flex',
-    // flexWrap: 'wrap',
-    // justifyContent
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -116,8 +114,16 @@ class Home extends React.Component {
 
 Home.propTypes = {
   actions: PropTypes.shape({
-    fetchTrackList: PropTypes.func,
-    onPlay: PropTypes.func,
+    uploadTracks: PropTypes.func.isRequired,
+    deleteObject: PropTypes.func.isRequired,
+    togglePlayer: PropTypes.func.isRequired,
+    downloadTrack: PropTypes.func.isRequired,
+    pause: PropTypes.func.isRequired,
+    play: PropTypes.func.isRequired,
+    nextTrack: PropTypes.func.isRequired,
+    previousTrack: PropTypes.func.isRequired,
+    fetchTrackList: PropTypes.func.isRequired,
+    onPlay: PropTypes.func.isRequired,
   }).isRequired,
   tracks: PropTypes.arrayOf(
     PropTypes.shape({
@@ -147,9 +153,6 @@ Home.propTypes = {
 const mapStateToProps = state => ({
   tracks: state.trackList.tracks,
   currentTrack: state.player.currentTrack || null,
-  // state.trackList.tracks.find(
-  //   track => track.name === state.player.currentTrack
-  // ) || null,
   player: state.player,
   isUploading: state.load.isUploading,
   isDownloading: state.load.isDownloading,

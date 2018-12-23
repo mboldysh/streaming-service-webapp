@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ClassNames from 'classnames';
 import SoundCloudAudio from 'soundcloud-audio';
 import { Icons } from 'react-soundplayer/components';
 
-class PlayButton extends Component {
+class PlayButton extends React.Component {
     shouldComponentUpdate(nextProps) {
         const { playing, seeking } = this.props;
 

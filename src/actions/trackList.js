@@ -1,37 +1,36 @@
 import * as api from '../api';
-import actionTypes from './actionTypes';
+import ActionTypes from './actionTypes';
+import { createNotification } from './notification';
+import NotificationTypes from './notificationTypes';
 
-export const fetchTrackList = () => (dispatch, getState) => {
-  dispatch({ type: actionTypes.FETCH_TRACK_LIST });
-  api
-    .fetchTrackList(getState().user.userName)
-    .then(tracks => {
-      dispatch({
-        type: actionTypes.FETCH_TRACK_LIST_DONE,
-        payload: { tracks },
-      });
-    })
-    .then(() => {
-      const notification = {
-        key: new Date().getTime() + Math.random(),
-        message: 'Failed fetching data.',
-        options: {
-          variant: 'warning',
-        },
-      };
-      dispatch({ type: 'ENQUEUE_SNACKBAR', payload: { notification } });
-    })
-    .catch(() => dispatch({ type: actionTypes.FETCH_TRACK_LIST_FAILED }));
+export const fetchTrackList = () => async (dispatch, getState) => {
+  dispatch({ type: ActionTypes.FETCH_TRACK_LIST });
+
+  try {
+    const tracks = await api.fetchTrackList(getState().user.userName);
+    dispatch({
+      type: ActionTypes.FETCH_TRACK_LIST_DONE,
+      payload: { tracks },
+    });
+  } catch (error) {
+    dispatch({ type: ActionTypes.FETCH_TRACK_LIST_FAILED });
+    createNotification(
+      "Can't fetch playlist",
+      NotificationTypes.ERROR,
+      dispatch
+    );
+  }
 };
 
-export const deleteObject = objectName => (dispatch, getState) => {
-  api
-    .deleteObject(getState().user.userName, objectName)
-    .then(tracks => {
-      dispatch({
-        type: actionTypes.FETCH_TRACK_LIST_DONE,
-        payload: { tracks },
-      });
-    })
-    .catch(() => dispatch({ type: actionTypes.FETCH_TRACK_LIST_FAILED }));
+export const deleteObject = objectName => async (dispatch, getState) => {
+  try {
+    const tracks = await api.deleteObject(getState().user.userName, objectName);
+    dispatch({
+      type: ActionTypes.FETCH_TRACK_LIST_DONE,
+      payload: { tracks },
+    });
+  } catch (error) {
+    dispatch({ type: ActionTypes.FETCH_TRACK_LIST_FAILED });
+    createNotification("Can't delete track", Notification.ERROR, dispatch);
+  }
 };

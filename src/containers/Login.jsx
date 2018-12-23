@@ -1,19 +1,17 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import * as UserActions from '../actions/user';
 import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
 
 const styles = theme => ({
     container: {
         display: 'flex',
-        // flexWrap: 'wrap',
-        // justifyContent
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
@@ -21,12 +19,6 @@ const styles = theme => ({
     textField: {
         width: 300,
     },
-    // dense: {
-    //     marginTop: 19,
-    // },
-    // menu: {
-    //     width: 200,
-    // },
 });
 
 class Login extends React.Component {
@@ -45,7 +37,7 @@ class Login extends React.Component {
             this.setState({
                 isButtonDisabled: false,
                 isError: false
-            }) 
+            })
         } else {
             this.setState({
                 isButtonDisabled: true,
@@ -103,21 +95,17 @@ class Login extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    tracks: state.trackList.tracks,
-    currentTrack: state.player.currentTrack || null,
-    // state.trackList.tracks.find(
-    //   track => track.name === state.player.currentTrack
-    // ) || null,
-    player: state.player,
-});
+Login.propTypes = {
+    actions: PropTypes.shape({
+        logIn: PropTypes.func.isRequired,
+    }).isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators({ ...UserActions }, dispatch),
 });
 
-// export default Login;
 export default compose(
     withStyles(styles),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(null, mapDispatchToProps)
 )(Login);

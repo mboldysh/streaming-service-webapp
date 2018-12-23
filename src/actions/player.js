@@ -1,54 +1,57 @@
 import * as api from '../api';
-import actioTypes from './actionTypes';
+import ActionTypes from './actionTypes';
 import fileSaver from '../fileSaver';
+import { createNotification } from './notification';
+import NotificationTypes from './notificationTypes';
 
-export const onPlay = trackName => (dispatch, getState) => {
-  dispatch({ type: actioTypes.PLAY_REQUEST, payload: trackName });
+export const onPlay = trackName => async (dispatch, getState) => {
+  dispatch({ type: ActionTypes.PLAY_REQUEST, payload: trackName });
 
-  api
-    .getPresignUrl(getState().user.userName, trackName)
-    .then(data => {
-      dispatch({
-        type: actioTypes.PLAY_REQUEST_SUCCSESS,
-        payload: { ...data },
-      });
-    })
-    .catch(err =>
-      dispatch({ type: actioTypes.PLAY_REQUEST_FAILED, payload: err })
-    );
+  try {
+    const data = await api.getPresignUrl(getState().user.userName, trackName);
+    dispatch({ type: ActionTypes.PLAY_REQUEST_SUCCSESS, payload: { ...data } });
+  } catch (error) {
+    dispatch({ type: ActionTypes.PLAY_REQUEST_FAILED });
+    createNotification("Can't play track", NotificationTypes.ERROR, dispatch);
+  }
 };
 
 export const pause = () => (dispatch, getState, soundCloudAudio) => {
   soundCloudAudio.pause();
-  dispatch({ type: actioTypes.TOGGLE_PLAYER });
+  dispatch({ type: ActionTypes.TOGGLE_PLAYER });
 };
 
-export const play = trackName => (dispatch, getState, soundCloudAudio) => {
+export const play = trackName => async (
+  dispatch,
+  getState,
+  soundCloudAudio
+) => {
   if (trackName === getState().player.currentTrack.name) {
     soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
-    dispatch({ type: actioTypes.TOGGLE_PLAYER });
+    dispatch({ type: ActionTypes.TOGGLE_PLAYER });
   } else {
-    dispatch({ type: actioTypes.REQUEST_NEXT_TRACK });
+    dispatch({ type: ActionTypes.REQUEST_NEXT_TRACK });
     soundCloudAudio.pause();
-    api
-      .getPresignUrl(getState().user.userName, trackName)
-      .then(data => {
-        dispatch({
-          type: actioTypes.PLAY_REQUEST_SUCCSESS,
-          payload: { ...data },
-        });
-      })
-      .then(() => {
-        soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
-        dispatch({ type: actioTypes.TOGGLE_PLAYER });
-      })
-      .catch(err => {
-        dispatch({ type: actioTypes.PLAY_REQUEST_FAILED, payload: err });
+    try {
+      const data = await api.getPresignUrl(getState().user.userName, trackName);
+      dispatch({
+        type: ActionTypes.PLAY_REQUEST_SUCCSESS,
+        payload: { ...data },
       });
+      dispatch({ type: ActionTypes.TOGGLE_PLAYER });
+      soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
+    } catch (error) {
+      dispatch({ type: ActionTypes.PLAY_REQUEST_FAILED });
+      createNotification("Can't play track", NotificationTypes.ERROR, dispatch);
+    }
   }
 };
 
-export const onAudioEnded = () => (dispatch, getState, soundCloudAudio) => {
+export const onAudioEnded = () => async (
+  dispatch,
+  getState,
+  soundCloudAudio
+) => {
   const currentTrackIndex = getState()
     .trackList.tracks.map(track => track.name)
     .indexOf(getState().player.currentTrack.name);
@@ -56,33 +59,37 @@ export const onAudioEnded = () => (dispatch, getState, soundCloudAudio) => {
     const nextTrackName = getState().trackList.tracks[currentTrackIndex + 1]
       .name;
 
-    dispatch({ type: actioTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
+    dispatch({ type: ActionTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
 
-    api
-      .getPresignUrl(getState().user.userName, nextTrackName)
-      .then(data => {
-        dispatch({
-          type: actioTypes.PLAY_REQUEST_SUCCSESS,
-          payload: { ...data },
-        });
-      })
-      .then(() => {
-        soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
-        dispatch({ type: actioTypes.TOGGLE_PLAYER });
-      })
-      .catch(err =>
-        dispatch({ type: actioTypes.PLAY_REQUEST_FAILED, payload: err })
+    try {
+      const data = await api.getPresignUrl(
+        getState().user.userName,
+        nextTrackName
       );
+      dispatch({
+        type: ActionTypes.PLAY_REQUEST_SUCCSESS,
+        payload: { ...data },
+      });
+      dispatch({ type: ActionTypes.TOGGLE_PLAYER });
+      soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
+    } catch (error) {
+      dispatch({ type: ActionTypes.PLAY_REQUEST_FAILED });
+      createNotification(
+        "Can't play next track",
+        NotificationTypes.ERROR,
+        dispatch
+      );
+    }
   } else {
-    dispatch({ type: actioTypes.TOGGLE_PLAYER });
+    dispatch({ type: ActionTypes.TOGGLE_PLAYER });
   }
 };
 
 export const togglePlayer = () => dispatch => {
-  dispatch({ type: actioTypes.TOGGLE_PLAYER });
+  dispatch({ type: ActionTypes.TOGGLE_PLAYER });
 };
 
-export const nextTrack = () => (dispatch, getState, soundCloudAudio) => {
+export const nextTrack = () => async (dispatch, getState, soundCloudAudio) => {
   const currentTrackIndex = getState()
     .trackList.tracks.map(track => track.name)
     .indexOf(getState().player.currentTrack.name);
@@ -90,27 +97,35 @@ export const nextTrack = () => (dispatch, getState, soundCloudAudio) => {
     const nextTrackName = getState().trackList.tracks[currentTrackIndex + 1]
       .name;
 
-    dispatch({ type: actioTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
+    dispatch({ type: ActionTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
 
-    api
-      .getPresignUrl(getState().user.userName, nextTrackName)
-      .then(data => {
-        dispatch({
-          type: actioTypes.PLAY_REQUEST_SUCCSESS,
-          payload: { ...data },
-        });
-      })
-      .then(() => {
-        soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
-        dispatch({ type: actioTypes.TOGGLE_PLAYER });
-      })
-      .catch(err =>
-        dispatch({ type: actioTypes.PLAY_REQUEST_FAILED, payload: err })
+    try {
+      const data = await api.getPresignUrl(
+        getState().user.userName,
+        nextTrackName
       );
+      dispatch({
+        type: ActionTypes.PLAY_REQUEST_SUCCSESS,
+        payload: { ...data },
+      });
+      dispatch({ type: ActionTypes.TOGGLE_PLAYER });
+      soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
+    } catch (error) {
+      dispatch({ type: ActionTypes.PLAY_REQUEST_FAILED });
+      createNotification(
+        "Can't play next track",
+        NotificationTypes.ERROR,
+        dispatch
+      );
+    }
   }
 };
 
-export const previousTrack = () => (dispatch, getState, soundCloudAudio) => {
+export const previousTrack = () => async (
+  dispatch,
+  getState,
+  soundCloudAudio
+) => {
   const currentTrackIndex = getState()
     .trackList.tracks.map(track => track.name)
     .indexOf(getState().player.currentTrack.name);
@@ -118,60 +133,57 @@ export const previousTrack = () => (dispatch, getState, soundCloudAudio) => {
     const nextTrackName = getState().trackList.tracks[currentTrackIndex - 1]
       .name;
 
-    dispatch({ type: actioTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
+    dispatch({ type: ActionTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
 
-    api
-      .getPresignUrl(getState().user.userName, nextTrackName)
-      .then(data => {
-        dispatch({
-          type: actioTypes.PLAY_REQUEST_SUCCSESS,
-          payload: { ...data },
-        });
-      })
-      .then(() => {
-        soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
-        dispatch({ type: actioTypes.TOGGLE_PLAYER });
-      })
-      .catch(err =>
-        dispatch({ type: actioTypes.PLAY_REQUEST_FAILED, payload: err })
+    try {
+      const data = await api.getPresignUrl(
+        getState().user.userName,
+        nextTrackName
       );
+      dispatch({
+        type: ActionTypes.PLAY_REQUEST_SUCCSESS,
+        payload: { ...data },
+      });
+      dispatch({ type: ActionTypes.TOGGLE_PLAYER });
+      soundCloudAudio.play({ streamUrl: getState().player.currentTrack.url });
+    } catch (error) {
+      dispatch({ type: ActionTypes.PLAY_REQUEST_FAILED });
+      createNotification(
+        "Can't play previous track",
+        NotificationTypes.ERROR,
+        dispatch
+      );
+    }
   }
 };
 
 export const uploadTracks = tracks => async (dispatch, getState) => {
-  dispatch({ type: actioTypes.UPLOUD_START });
+  dispatch({ type: ActionTypes.UPLOUD_START });
 
   try {
     await api.uploadFiles(getState().user.userName, tracks);
-    dispatch({ type: actioTypes.FETCH_TRACK_LIST });
+    dispatch({ type: ActionTypes.FETCH_TRACK_LIST });
 
     const trackList = await api.fetchTrackList(getState().user.userName);
 
     dispatch({
-      type: actioTypes.FETCH_TRACK_LIST_DONE,
+      type: ActionTypes.FETCH_TRACK_LIST_DONE,
       payload: { tracks: trackList },
     });
   } catch (error) {
-    console.log(error);
-    dispatch({ type: actioTypes.FETCH_TRACK_LIST_FAILED });
+    dispatch({ type: ActionTypes.FETCH_TRACK_LIST_FAILED });
+    createNotification(
+      "Can't upload tracks",
+      NotificationTypes.ERROR,
+      dispatch
+    );
   }
 
-  dispatch({ type: actioTypes.UPLOAD_FINISHED });
+  dispatch({ type: ActionTypes.UPLOAD_FINISHED });
 };
 
-// dispatch({ type: actionTypes.FETCH_TRACK_LIST });
-//   api
-//     .fetchTrackList()
-//     .then(tracks => {
-//       dispatch({
-//         type: actionTypes.FETCH_TRACK_LIST_DONE,
-//         payload: { tracks },
-//       });
-//     })
-//     .catch(() => dispatch({ type: actionTypes.FETCH_TRACK_LIST_FAILED }));
-
 export const downloadTrack = trackName => async (dispatch, getState) => {
-  dispatch({ type: actioTypes.DOWNLOAD_START });
+  dispatch({ type: ActionTypes.DOWNLOAD_START });
 
   try {
     const { url } = await api.getPresignUrl(
@@ -183,8 +195,12 @@ export const downloadTrack = trackName => async (dispatch, getState) => {
 
     await fileSaver(data, trackName);
   } catch (error) {
-    console.log(error);
+    createNotification(
+      "Can't download track",
+      NotificationTypes.ERROR,
+      dispatch
+    );
   }
 
-  dispatch({ type: actioTypes.DOWNLOAD_FINISHED });
+  dispatch({ type: ActionTypes.DOWNLOAD_FINISHED });
 };

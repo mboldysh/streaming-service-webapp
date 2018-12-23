@@ -1,10 +1,12 @@
+import ActionsType from '../actions/actionTypes';
+
 const initialState = {
   notifications: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'ENQUEUE_SNACKBAR':
+    case ActionsType.ENQUEUE_SNACKBAR:
       return {
         ...state,
         notifications: [
@@ -15,7 +17,7 @@ export default (state = initialState, action) => {
         ],
       };
 
-    case 'REMOVE_SNACKBAR':
+    case ActionsType.REMOVE_SNACKBAR:
       return {
         ...state,
         notifications: state.notifications.filter(

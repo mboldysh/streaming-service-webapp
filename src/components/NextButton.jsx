@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ClassNames from 'classnames';
 import SoundCloudAudio from 'soundcloud-audio';
 import { Icons } from 'react-soundplayer/components';
 
-class NextButton extends Component {
+class NextButton extends React.Component {
   shouldComponentUpdate() {
     return false;
   }
