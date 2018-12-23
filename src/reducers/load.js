@@ -2,7 +2,7 @@ import ActionTypes from '../actions/actionTypes';
 
 const initialState = {
   isUploading: false,
-  isDownloadig: false,
+  isDownloading: false,
 };
 
 export default (state = initialState, action) => {
@@ -10,13 +10,13 @@ export default (state = initialState, action) => {
     case ActionTypes.DOWNLOAD_START: {
       return {
         ...state,
-        isDownloadig: true,
+        isDownloading: true,
       };
     }
     case ActionTypes.DOWNLOAD_FINISHED: {
       return {
         ...state,
-        isDownloadig: false,
+        isDownloading: false,
       };
     }
     case ActionTypes.UPLOUD_START: {
