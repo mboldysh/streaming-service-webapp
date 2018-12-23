@@ -7,18 +7,19 @@ const apify = axiosPromise =>
     axiosPromise.then(({ data }) => resolve(data)).catch(reject)
   );
 
-export const fetchTrackList = () => apify(axios.get('api/v1/users/u1/tracks'));
-export const getPresignUrl = trackName =>
-  apify(axios.get(`api/v1/users/u1/tracks/${trackName}`));
-export const deleteObject = trackName =>
-  apify(axios.delete(`api/v1/users/u1/tracks/${trackName}`));
+export const fetchTrackList = userName =>
+  apify(axios.get(`api/v1/users/${userName}/tracks`));
+export const getPresignUrl = (userName, trackName) =>
+  apify(axios.get(`api/v1/users/${userName}/tracks/${trackName}`));
+export const deleteObject = (userName, trackName) =>
+  apify(axios.delete(`api/v1/users/${userName}/tracks/${trackName}`));
 
-export const uploadFiles = files => {
+export const uploadFiles = (userName, files) => {
   console.log(files);
   const uploaders = Array.from(files).map(file => {
     const formData = new FormData();
     formData.append('file', file, file.name);
-    return axios.post('api/v1/users/u1/tracks', formData, {
+    return axios.post(`api/v1/users/${userName}/tracks`, formData, {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
     });
   });

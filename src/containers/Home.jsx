@@ -5,17 +5,27 @@ import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Add from '@material-ui/icons/Add';
 import Header from '../components/Header';
 import TrackList from '../components/TrackList';
 import SoundPlayer from '../components/SoundPlayer';
 import * as TracksActions from '../actions/trackList';
 import * as PlayerActions from '../actions/player';
 import * as UserActions from '../actions/user';
+import Notifier from './Notifier';
 
 const styles = () => ({
   root: {
     width: '100%',
     maxWidth: 1200,
+  },
+  container: {
+    display: 'flex',
+    // flexWrap: 'wrap',
+    // justifyContent
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -44,13 +54,14 @@ class Home extends React.Component {
     } = this.props;
     return (
       <div>
+        <Notifier />
         <Header
           uploadTracks={actions.uploadTracks}
           isUploading={isUploading}
           isDownloading={isDownloading}
           logOut={actions.logOut}
         />
-        {currentTrack && (
+        {tracks.length > 0 && currentTrack ? (
           <div>
             <Grid
               container
@@ -59,7 +70,6 @@ class Home extends React.Component {
               alignItems="center"
             >
               <div className={classes.root}>
-                {/* <LinearProgress color="secondary" /> */}
                 <TrackList
                   tracks={tracks}
                   deleteTrack={actions.deleteObject}
@@ -86,6 +96,18 @@ class Home extends React.Component {
               preloadType="auto"
             />
           </div>
+        ) : (
+          <Grid
+            container
+            spacing={0}
+            direction="row"
+            alignItems="center"
+            justify="center"
+            style={{ minHeight: '20vh' }}
+          >
+            Playlist is empty. Click <Add color="secondary" /> button to add
+            tracks.
+          </Grid>
         )}
       </div>
     );

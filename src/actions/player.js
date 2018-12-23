@@ -2,11 +2,11 @@ import * as api from '../api';
 import actioTypes from './actionTypes';
 import fileSaver from '../fileSaver';
 
-export const onPlay = trackName => dispatch => {
+export const onPlay = trackName => (dispatch, getState) => {
   dispatch({ type: actioTypes.PLAY_REQUEST, payload: trackName });
 
   api
-    .getPresignUrl(trackName)
+    .getPresignUrl(getState().user.userName, trackName)
     .then(data => {
       dispatch({
         type: actioTypes.PLAY_REQUEST_SUCCSESS,
@@ -31,7 +31,7 @@ export const play = trackName => (dispatch, getState, soundCloudAudio) => {
     dispatch({ type: actioTypes.REQUEST_NEXT_TRACK });
     soundCloudAudio.pause();
     api
-      .getPresignUrl(trackName)
+      .getPresignUrl(getState().user.userName, trackName)
       .then(data => {
         dispatch({
           type: actioTypes.PLAY_REQUEST_SUCCSESS,
@@ -59,7 +59,7 @@ export const onAudioEnded = () => (dispatch, getState, soundCloudAudio) => {
     dispatch({ type: actioTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
 
     api
-      .getPresignUrl(nextTrackName)
+      .getPresignUrl(getState().user.userName, nextTrackName)
       .then(data => {
         dispatch({
           type: actioTypes.PLAY_REQUEST_SUCCSESS,
@@ -93,7 +93,7 @@ export const nextTrack = () => (dispatch, getState, soundCloudAudio) => {
     dispatch({ type: actioTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
 
     api
-      .getPresignUrl(nextTrackName)
+      .getPresignUrl(getState().user.userName, nextTrackName)
       .then(data => {
         dispatch({
           type: actioTypes.PLAY_REQUEST_SUCCSESS,
@@ -121,7 +121,7 @@ export const previousTrack = () => (dispatch, getState, soundCloudAudio) => {
     dispatch({ type: actioTypes.REQUEST_NEXT_TRACK, payload: nextTrackName });
 
     api
-      .getPresignUrl(nextTrackName)
+      .getPresignUrl(getState().user.userName, nextTrackName)
       .then(data => {
         dispatch({
           type: actioTypes.PLAY_REQUEST_SUCCSESS,
@@ -138,14 +138,14 @@ export const previousTrack = () => (dispatch, getState, soundCloudAudio) => {
   }
 };
 
-export const uploadTracks = tracks => async dispatch => {
+export const uploadTracks = tracks => async (dispatch, getState) => {
   dispatch({ type: actioTypes.UPLOUD_START });
 
   try {
-    await api.uploadFiles(tracks);
+    await api.uploadFiles(getState().user.userName, tracks);
     dispatch({ type: actioTypes.FETCH_TRACK_LIST });
 
-    const trackList = await api.fetchTrackList();
+    const trackList = await api.fetchTrackList(getState().user.userName);
 
     dispatch({
       type: actioTypes.FETCH_TRACK_LIST_DONE,
@@ -170,11 +170,14 @@ export const uploadTracks = tracks => async dispatch => {
 //     })
 //     .catch(() => dispatch({ type: actionTypes.FETCH_TRACK_LIST_FAILED }));
 
-export const downloadTrack = trackName => async dispatch => {
+export const downloadTrack = trackName => async (dispatch, getState) => {
   dispatch({ type: actioTypes.DOWNLOAD_START });
 
   try {
-    const { url } = await api.getPresignUrl(trackName);
+    const { url } = await api.getPresignUrl(
+      getState().user.userName,
+      trackName
+    );
 
     const { data } = await api.downloadFile(url);
 

@@ -1,0 +1,36 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import ClassNames from 'classnames';
+import SoundCloudAudio from 'soundcloud-audio';
+import { Icons } from 'react-soundplayer/components';
+
+class PrevButton extends Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  handleClick = e => {
+    const { onPrevClick } = this.props;
+
+    onPrevClick();
+  }
+
+  render() {
+    const { className, style } = this.props;
+    const classNames = ClassNames('sb-soundplayer-btn sb-soundplayer-prev-btn', className);
+
+    return (
+      <button type="button" className={classNames} style={style} onClick={this.handleClick}>
+        <Icons.PrevIconSVG />
+      </button>
+    );
+  }
+}
+
+PrevButton.propTypes = {
+  className: PropTypes.string,
+  onPrevClick: PropTypes.func,
+  soundCloudAudio: PropTypes.instanceOf(SoundCloudAudio)
+};
+
+export default PrevButton;

@@ -1,8 +1,10 @@
 import React from 'react';
-import { Timer, NextButton, PrevButton } from 'react-soundplayer/components';
+import { Timer } from 'react-soundplayer/components';
 import PropTypes from 'prop-types';
 import withPlayer from '../hocs/withPlayer';
 import PlayButton from './PlayButton';
+import NextButton from './NextButton';
+import PrevButton from './PrevButton';
 import 'react-soundplayer/styles/buttons.css';
 import 'react-soundplayer/styles/icons.css';
 import 'react-soundplayer/styles/progress.css';
