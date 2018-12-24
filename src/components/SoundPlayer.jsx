@@ -5,9 +5,7 @@ import withPlayer from '../hocs/withPlayer';
 import PlayButton from './PlayButton';
 import NextButton from './NextButton';
 import PrevButton from './PrevButton';
-import 'react-soundplayer/styles/buttons.css';
-import 'react-soundplayer/styles/icons.css';
-import 'react-soundplayer/styles/progress.css';
+
 
 const SoundPlayer = withPlayer(props => {
   const { trackTitle, nextTrack, previousTrack } = props;

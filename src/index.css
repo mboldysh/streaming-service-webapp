@@ -1379,3 +1379,66 @@ h2 a:hover {
 .custom-track-bg::-ms-thumb {
   background: #fff;
 }
+
+.sb-soundplayer-btn {
+  display: inline-block;
+  background-color: transparent;
+  color: #FC561E;
+  font-size: 1em;
+  padding: 16px;
+  padding: 1rem;
+  margin: 0;
+  height: auto;
+  vertical-align: middle;
+  border-radius: 3px;
+  text-decoration: none;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  -webkit-transition: .05s ease, -webkit-transform, -webkit-box-shadow;
+  transition: .05s ease, -webkit-transform, -webkit-box-shadow;
+  transition: transform, box-shadow, .05s ease;
+  transition: transform, box-shadow, .05s ease, -webkit-transform, -webkit-box-shadow;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-appearance: none;
+}
+.sb-soundplayer-btn:hover {
+  -webkit-transform: scale(1.0625);
+          transform: scale(1.0625);
+}
+.sb-soundplayer-btn:focus {
+  -webkit-transform: scale(.9375);
+          transform: scale(.9375);
+}
+.sb-soundplayer-btn:active {
+  -webkit-box-shadow: inset 0 0 0 2px #FC561E;
+          box-shadow: inset 0 0 0 2px #FC561E;
+}
+.sb-soundplayer-btn:hover,
+.sb-soundplayer-btn:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.sb-soundplayer-icon {
+  width: 1em;
+  height: 1em;
+  position: relative;
+  vertical-align: middle;
+}
+
+.sb-soundplayer-progress-container {
+  background-color: #DDD;
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.sb-soundplayer-progress-inner {
+  background-color: #FC561E;
+  height: 100%;
+  -webkit-transition: width .2s ease-in;
+  transition: width .2s ease-in;
+}
