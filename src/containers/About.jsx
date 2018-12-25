@@ -50,8 +50,12 @@ const About = classes => (
           playlists.
         </p>
         <p>
-          Star project on <a href="http://google.com">github</a> and feel free
-          to propose any idea about future service development or to make PR.
+          Star project on{' '}
+          <a href="https://github.com/mboldysh/streaming-service-webapp">
+            github
+          </a>{' '}
+          and feel free to propose any idea about future service development or
+          to make PR.
         </p>
         <p>
           Best regards,
