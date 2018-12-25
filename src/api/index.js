@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// axios.defaults.baseURL = `http://streaming-service-2138331631.us-east-2.elb.amazonaws.com`;
+// axios.defaults.baseURL = `load balancer address`;
 
 const apify = axiosPromise =>
   new Promise((resolve, reject) =>
@@ -19,7 +19,10 @@ export const uploadFiles = (userName, files) => {
     const formData = new FormData();
     formData.append('file', file, file.name);
     return axios.post(`api/v1/users/${userName}/tracks`, formData, {
-      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Access-Control-Allow-Origin': '*',
+      },
     });
   });
 
