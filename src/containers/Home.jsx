@@ -6,12 +6,11 @@ import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Add from '@material-ui/icons/Add';
-import Header from '../components/Header';
+import Header from './Header';
 import TrackList from '../components/TrackList';
 import SoundPlayer from '../components/SoundPlayer';
 import * as TracksActions from '../actions/trackList';
 import * as PlayerActions from '../actions/player';
-import * as UserActions from '../actions/user';
 import Notifier from './Notifier';
 
 const styles = () => ({
@@ -40,25 +39,19 @@ class Home extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    const { actions, player } = this.props;
+    if (player.isPlaying) {
+      actions.pause();
+    }
+  }
+
   render() {
-    const {
-      actions,
-      player,
-      tracks,
-      currentTrack,
-      classes,
-      isDownloading,
-      isUploading,
-    } = this.props;
+    const { actions, player, tracks, currentTrack, classes } = this.props;
     return (
       <div>
         <Notifier />
-        <Header
-          uploadTracks={actions.uploadTracks}
-          isUploading={isUploading}
-          isDownloading={isDownloading}
-          logOut={actions.logOut}
-        />
+        <Header />
         {tracks.length > 0 && currentTrack ? (
           <div>
             <Grid
@@ -114,7 +107,6 @@ class Home extends React.Component {
 
 Home.propTypes = {
   actions: PropTypes.shape({
-    uploadTracks: PropTypes.func.isRequired,
     deleteObject: PropTypes.func.isRequired,
     togglePlayer: PropTypes.func.isRequired,
     downloadTrack: PropTypes.func.isRequired,
@@ -142,8 +134,6 @@ Home.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     isPlaying: PropTypes.bool.isRequired,
   }).isRequired,
-  isUploading: PropTypes.bool.isRequired,
-  isDownloading: PropTypes.bool.isRequired,
   classes: PropTypes.shape({
     width: PropTypes.string,
     maxWidth: PropTypes.number,
@@ -154,15 +144,10 @@ const mapStateToProps = state => ({
   tracks: state.trackList.tracks,
   currentTrack: state.player.currentTrack || null,
   player: state.player,
-  isUploading: state.load.isUploading,
-  isDownloading: state.load.isDownloading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(
-    { ...TracksActions, ...PlayerActions, ...UserActions },
-    dispatch
-  ),
+  actions: bindActionCreators({ ...TracksActions, ...PlayerActions }, dispatch),
 });
 
 export default compose(

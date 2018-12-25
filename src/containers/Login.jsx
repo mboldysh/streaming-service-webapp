@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import * as UserActions from '../actions/user';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import Header from './Header';
 
 const styles = theme => ({
     container: {
@@ -52,7 +53,6 @@ class Login extends React.Component {
     handleSubmit = event => {
         event.preventDefault()
         const { actions, history } = this.props;
-        console.log(this.state.login)
         actions.logIn(this.state.login)
         history.push('/')
     }
@@ -62,13 +62,14 @@ class Login extends React.Component {
         const { isButtonDisabled, isError } = this.state;
         return (
             <div>
+                <Header />
                 <Grid
                     container
                     spacing={0}
                     direction="column"
                     alignItems="center"
                     justify="center"
-                    style={{ minHeight: '100vh' }}
+                    style={{ minHeight: '80vh' }}
                 >
                     <Grid item xs={3}>
 
