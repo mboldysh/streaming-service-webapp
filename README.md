@@ -39,9 +39,10 @@ cd streming-service-webapp
 npm install
 # After backend infrastructure were deployed load balancer address can be found in cloudforamation stack output.
 #   1. Copy load balancer url from cloudformation stack output
-#   2. Open package.json
-#   3. Paste load balancer url into proxy:
-#       "proxy": "<load balancer url address>"
+#   2. Open src/api/index.js
+#   3. Uncomment axios.default.baseURL line 
+#   3. Paste load balancer url into it
+#       axios.defaults.baseURL = `<load balancer url address>`;
 # create production build 
 npm run build 
 # open cloudformation folder and deploy cloudformation template which creates s3 bucket for hosting web app.

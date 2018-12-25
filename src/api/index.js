@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+// axios.defaults.baseURL allows setup backend url.
+// For production build should be uncommented and
+// backend url should be setuped
+
+// axios.defaults.baseURL = `backendURL`;
+
 const apify = axiosPromise =>
   new Promise((resolve, reject) =>
     axiosPromise.then(({ data }) => resolve(data)).catch(reject)
