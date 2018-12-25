@@ -5,13 +5,17 @@ Parameters:
 
   UserName:
     Description: A name of the user which will have write permissions to the created bucket
+    Type: String
+
+  BucketName:
+    Description: A name of a bucket which will store web app
     Type: String 
 
 Resources:
   s3Bucket:
     Type: AWS::S3::Bucket
     Properties: 
-      BucketName: streaming-service-webapp
+      BucketName: !Ref BucketName
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: / 
@@ -25,7 +29,9 @@ Resources:
             Action:
               - "s3:GetObject"
             Effect: "Allow"
-            Resource: 'arn:aws:s3:::streaming-service-webapp/*'
+            Resource: !Sub
+              - 'arn:aws:s3:::${bucket}/*'
+              - { bucket: !Ref BucketName }
             Principal: "*"
           - Sid: ListWriteDeleteAccess
             Action:
@@ -34,8 +40,12 @@ Resources:
               - "s3:DeleteObject"
             Effect: "Allow"
             Resource:
-              - 'arn:aws:s3:::streaming-service-webapp/*'
-              - 'arn:aws:s3:::streaming-service-webapp' 
+              - !Sub 
+                - 'arn:aws:s3:::${bucket}/*'
+                - { bucket: !Ref BucketName }
+              - !Sub 
+                - 'arn:aws:s3:::${bucket}'
+                - { bucket: !Ref BucketName } 
             Principal:
                AWS:
                 - !Join ['', ['arn:aws:iam::', !Ref 'AWS::AccountId', ':user/', !Ref 'UserName']]
