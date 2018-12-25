@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-// axios.defaults.baseURL = `load balancer address`;
-
 const apify = axiosPromise =>
   new Promise((resolve, reject) =>
     axiosPromise.then(({ data }) => resolve(data)).catch(reject)

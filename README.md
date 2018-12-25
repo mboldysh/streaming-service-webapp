@@ -7,8 +7,7 @@ is ability to share music across devices. Ideal for those who have a local music
 collection and don't want to buy a subscription to the streaming service. Also, as service 
 deployed decentralized, it's easy to share your server with your friends. Just send a link 
 to your service to friends you want to invite and here it is! Use the same username to listen and 
-modify one playlist or use different usernames to have individual playlists. 
-For now supported only self deployed version - see Deployment section. 
+modify one playlist or use different usernames to have individual playlists.
 
 ![alt text](https://raw.githubusercontent.com/mboldysh/streaming-service-webapp/master/images/screenshot1.png) 
 
@@ -21,7 +20,7 @@ To deploy to AWS:
 ### 1. Deploy backend 
 
 At first deploy backed infrastructure. Go to backend 
-github repository and follow steps from deployment section in README file. 
+github [`repository`](https://github.com/mboldysh/streaming-service) and follow steps from deployment section.
 
 ### 2. Deploy Web App 
 
@@ -39,15 +38,18 @@ cd streming-service-webapp
 # install dependencies
 npm install
 # After backend infrastructure were deployed load balancer address can be found in cloudforamation stack output.
-# Copy this address and open api file which can be found at src/api/index.js. In this file there is one commented 
-# line which starts with axios.defaults.baseURL. Uncomment it and paste load balancer url into it. This line should 
-# look like this:
-axios.defaults.baseURL = `<load balancer url address>`;
+#   1. Copy load balancer url from cloudformation stack output
+#   2. Open package.json
+#   3. Paste load balancer url into proxy:
+#       "proxy": "<load balancer url address>"
 # create production build 
 npm run build 
 # open cloudformation folder and deploy cloudformation template which creates s3 bucket for hosting web app.
 cd cloudformation
-aws --region <A name of region> cloudformation create-stack --stack-name streaming-service-webapp --template-body file://s3StaticWebsite.yml --parameters ParameterKey=UserName,ParameterValue=<A name of the user which will have write permissions to the created bucket> ParameterKey=BucketName,ParameterValue=<A name of a bucket which will store web app>
+aws --region <A name of region> cloudformation create-stack --stack-name streaming-service-webapp \
+--template-body file://s3StaticWebsite.yml \
+--parameters ParameterKey=UserName,ParameterValue=<A name of the AWS user> \
+ParameterKey=BucketName,ParameterValue=<A name of a bucket which will store web app>
 # After cloudformation stack will be deployed, the next step is to sync production build to bucket.
 cd ../build
 aws s3 sync . s3://<Name of bucket>
@@ -77,10 +79,9 @@ npm install
 # If backend infrastructure setuped locally no additional actions is needed.
 # If backend infrastructure deployed to AWS follow the next steps:
 #   1. Copy load balancer url from cloudformation stack output
-#   2. Open src/api/index.js
-#   3. Uncomment line which starts with axios.defaults.baseURL
-#   4. Paste load balancer url into this line. Line should look like this:
-axios.defaults.baseURL = `<load balancer url address>`;
+#   2. Open package.json
+#   3. Paste load balancer url into proxy:
+#       "proxy": "<load balancer url address>"
 # run development server 
 npm start 
 ``` 
